@@ -149,9 +149,9 @@ class OpenGraphLogic(object):
                 web_link.author = self._get_meta_tag_value(document, 'meta[name=author]')
 
                 web_link.og_title = self._get_meta_tag_value(document, 'meta[property=og:title]')
+                web_link.og_url = self._get_meta_tag_value(document, 'meta[property=og:url]')
                 web_link.og_type = self._get_meta_tag_value(document, 'meta[property=og:type]')
                 web_link.og_image = self._get_meta_tag_value(document, 'meta[property=og:image]')
-                web_link.og_url = self._get_meta_tag_value(document, 'meta[property=og:url]')
                 web_link.og_description = self._get_meta_tag_value(document, 'meta[property=og:description]')
                 web_link.og_site_name = self._get_meta_tag_value(document, 'meta[property=og:site_name]')
 

@@ -162,10 +162,10 @@ admin.site.register(models.Contact, ContactAdmin)
 
 class WebLinkAdmin(abstracts.ModelAdminAbstract):
     search_fields = ['url', 'title', 'description', 'keywords', 'author',
-                     'og_title', 'og_type', 'og_image', 'og_url', 'og_description', 'og_site_name', ]
+                     'og_title', 'og_url', 'og_type', 'og_image', 'og_description', 'og_site_name', ]
     list_filter = ['og_type', 'version', 'added_at', ]
     list_display = ['url', 'version', 'title', 'description', 'keywords', 'author',
-                    'og_title', 'og_type', 'og_image', 'og_url', 'og_description', 'og_site_name', ]
+                    'og_title', 'og_url', 'og_type', 'og_image', 'og_description', 'og_site_name', ]
 
 
 admin.site.register(models.WebLink, WebLinkAdmin)

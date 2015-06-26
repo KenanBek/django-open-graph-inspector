@@ -2,12 +2,12 @@
 {% load i18n %}
 
 {% block content %}
+    <div id="loading" style="display: none; position: absolute; top: 5px; right: 20px; background-color: #737373; color: snow;">
+        <h5>{% blocktrans %}Inspecting...{% endblocktrans %}</h5>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <h1>{% blocktrans %}The Open Graph Protocol Inspector{% endblocktrans %}</h1>
-            <div id="loading" style="display: none; position: absolute; top: 10px; right: 30px; background-color: #737373; color: snow;">
-                <h5>{% blocktrans %}Inspecting...{% endblocktrans %}</h5>
-            </div>
             <div class="span12">
                 <input id="url" name="url" type="text" class="inline" style="width: 80%;" placeholder="{% trans "Please enter URL..." %}">
                 <input id="inspect" type="button" class="inline" value="{% trans "Inspect" %}">
@@ -16,7 +16,6 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3>{% blocktrans %}Result:{% endblocktrans %}</h3>
             <div id="inspect-result-container">
             </div>
         </div>

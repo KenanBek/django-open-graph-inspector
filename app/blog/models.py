@@ -215,9 +215,9 @@ class WebLink(abstracts.ModelAbstract):
     author = models.CharField(max_length=10240, null=True, blank=True)
     # The Open Graph Protocol fields
     og_title = models.CharField(max_length=10240, null=True, blank=True)
+    og_url = models.URLField(max_length=10240, null=True, blank=True)
     og_type = models.CharField(max_length=10240, null=True, blank=True)
     og_image = models.URLField(max_length=10240, null=True, blank=True)
-    og_url = models.URLField(max_length=10240, null=True, blank=True)
     og_description = models.CharField(max_length=10240, null=True, blank=True)
     og_site_name = models.CharField(max_length=10240, null=True, blank=True)
 

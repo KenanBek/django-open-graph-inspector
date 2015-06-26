@@ -1,1 +1,1 @@
-Root for media and static files.
+Root for media and static files when project published.
