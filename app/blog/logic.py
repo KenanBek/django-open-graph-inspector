@@ -96,10 +96,14 @@ class Helper(object):
         return [x for x in seq if not (x in seen or seen_add(x))]
 
     @staticmethod
+    def get_domain(url):
+        parsed_uri = urlparse.urlparse(url)
+        domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+        return domain
+
+    @staticmethod
     def fix_url(parent_url, url):
-        url = url.lower()
-        source_url = parent_url.lower()
-        parsed_uri = urlparse.urlparse(source_url)
+        parsed_uri = urlparse.urlparse(parent_url)
         domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
         result = urlparse.urljoin(domain, url)
         return result
@@ -135,6 +139,26 @@ class OpenGraphLogic(object):
         if tag:
             return Helper.encode_string(tag[0]['content'])
 
+    def _get_og_image_urls(self, document):
+        result = []
+        tags = self._css_select(document, 'meta[property=og:image]')
+        if tags:
+            for tag in tags:
+                url = tag.get('content', None)
+                if url:
+                    result.append(Helper.encode_string(url))
+        return Helper.clean_array(result)
+
+    def _get_html_image_urls(self, document):
+        result = []
+        tags = self._css_select(document, 'img')
+        if tags:
+            for tag in tags:
+                url = tag.get('src', None)
+                if url:
+                    result.append(Helper.encode_string(url))
+        return Helper.clean_array(result)
+
     def inspect(self):
         result = WebInspector()
         page_loader = Helper.get_page_by_url(self.url)
@@ -156,6 +180,22 @@ class OpenGraphLogic(object):
                 web_link.og_site_name = self._get_meta_tag_value(document, 'meta[property=og:site_name]')
 
                 web_link.save()
+                url_domain = Helper.get_domain(self.url)
+
+                og_image_urls = self._get_og_image_urls(document)
+                for image_url in og_image_urls:
+                    web_image = models.WebImage()
+                    web_image.image_url = Helper.fix_url(url_domain, image_url)
+                    web_image.web_link = web_link
+                    web_image.save()
+
+                html_image_urls = self._get_html_image_urls(document)
+                for image_url in html_image_urls:
+                    web_image = models.WebImage()
+                    web_image.image_url = Helper.fix_url(url_domain, image_url)
+                    web_image.web_link = web_link
+                    web_image.save()
+
                 result.success = True
                 result.web_link = web_link
             except Exception as e:

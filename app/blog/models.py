@@ -230,3 +230,8 @@ class WebLink(abstracts.ModelAbstract):
     class Meta:
         unique_together = (('url', 'version'), )
 
+
+class WebImage(abstracts.ModelAbstract):
+    image_url = models.URLField(max_length=10240)
+    web_link = models.ForeignKey(WebLink)
+

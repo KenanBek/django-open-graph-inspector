@@ -40,6 +40,13 @@
         <dd>{{ web_inspector.web_link.og_description }}</dd>
         <dt>{% trans "Site name" %}</dt>
         <dd>{{ web_inspector.web_link.og_site_name }}</dd>
+        <h3>{% blocktrans %}Images{% endblocktrans %}</h3>
+        <hr />
+        <dd>
+            {% for web_image in web_inspector.web_link.webimage_set.all %}
+                <img src="{{ web_image.image_url }}" alt="{{ web_image.image_url }}" title="{{ web_image.image_url }}" />
+            {% endfor %}
+        </dd>
     </dl>
 {% else %}
     <p class="text text-danger">{{ web_inspector.message }}</p>
