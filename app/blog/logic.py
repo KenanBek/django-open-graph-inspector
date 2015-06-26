@@ -165,7 +165,7 @@ class OpenGraphLogic(object):
         if page_loader.success:
             try:
                 content = page_loader.content
-                document = BeautifulSoup(content)
+                document = BeautifulSoup(content.lower())
                 web_link = self._get_web_link()
                 web_link.title = self._get_text_tag_value(document, 'title')
                 web_link.description = self._get_meta_tag_value(document, 'meta[name=description]')
