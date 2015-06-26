@@ -1,0 +1,37 @@
+{% load i18n %}
+{% if web_inspector.success %}
+    <dl class="dl-horizontal">
+        <dt>{% trans "URL" %}</dt>
+        <dd>{{ web_inspector.web_link.url }}</dd>
+        <dt>{% trans "Version" %}</dt>
+        <dd>{{ web_inspector.web_link.version }}</dd>
+        <hr />
+        <dt>{% trans "Message" %}</dt>
+        <dd>{{ web_inspector.message }}</dd>
+        <hr />
+        <dt>{% trans "Title" %}</dt>
+        <dd>{{ web_inspector.web_link.title }}</dd>
+        <dt>{% trans "Description" %}</dt>
+        <dd>{{ web_inspector.web_link.description }}</dd>
+        <dt>{% trans "Keywords" %}</dt>
+        <dd>{{ web_inspector.web_link.keywords }}</dd>
+        <dt>{% trans "Author" %}</dt>
+        <dd>{{ web_inspector.web_link.author }}</dd>
+        <h3>The Open Graph Protocol</h3>
+        <hr />
+        <dt>{% trans "Title" %}</dt>
+        <dd>{{ web_inspector.web_link.og_title }}</dd>
+        <dt>{% trans "Type" %}</dt>
+        <dd>{{ web_inspector.web_link.og_type }}</dd>
+        <dt>{% trans "Image" %}</dt>
+        <dd>{{ web_inspector.web_link.og_image }}</dd>
+        <dt>{% trans "URL" %}</dt>
+        <dd>{{ web_inspector.web_link.og_url }}</dd>
+        <dt>{% trans "Description" %}</dt>
+        <dd>{{ web_inspector.web_link.og_description }}</dd>
+        <dt>{% trans "Site name" %}</dt>
+        <dd>{{ web_inspector.web_link.og_site_name }}</dd>
+    </dl>
+{% else %}
+    <p class="text text-danger">{{ web_inspector.message }}</p>
+{% endif %}
