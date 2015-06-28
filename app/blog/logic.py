@@ -103,9 +103,9 @@ class Helper(object):
 
     @staticmethod
     def fix_url(parent_url, url):
-        parsed_uri = urlparse.urlparse(parent_url)
-        domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
-        result = urlparse.urljoin(domain, url)
+        # parsed_uri = urlparse.urlparse(parent_url)
+        # domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+        result = urlparse.urljoin(parent_url, url)
         return result
 
 
@@ -165,7 +165,7 @@ class OpenGraphLogic(object):
         if page_loader.success:
             try:
                 content = page_loader.content
-                document = BeautifulSoup(content.lower())
+                document = BeautifulSoup(content)
                 web_link = self._get_web_link()
                 web_link.title = self._get_text_tag_value(document, 'title')
                 web_link.description = self._get_meta_tag_value(document, 'meta[name=description]')
@@ -180,26 +180,26 @@ class OpenGraphLogic(object):
                 web_link.og_site_name = self._get_meta_tag_value(document, 'meta[property=og:site_name]')
 
                 web_link.save()
-                url_domain = Helper.get_domain(self.url)
+                parent_url = self.url
 
                 og_image_urls = self._get_og_image_urls(document)
                 for image_url in og_image_urls:
                     web_image = models.WebImage()
-                    web_image.image_url = Helper.fix_url(url_domain, image_url)
+                    web_image.image_url = Helper.fix_url(parent_url, image_url)
                     web_image.web_link = web_link
                     web_image.save()
 
                 html_image_urls = self._get_html_image_urls(document)
                 for image_url in html_image_urls:
                     web_image = models.WebImage()
-                    web_image.image_url = Helper.fix_url(url_domain, image_url)
+                    web_image.image_url = Helper.fix_url(parent_url, image_url)
                     web_image.web_link = web_link
                     web_image.save()
 
                 result.success = True
                 result.web_link = web_link
             except Exception as e:
-                message = u"Exception on inspection url {}: {}".format(self.url, repr(e))
+                message = u"Exception on inspection url '{}': {}".format(self.url, repr(e))
                 result.success = False
                 result.message = message
         else:

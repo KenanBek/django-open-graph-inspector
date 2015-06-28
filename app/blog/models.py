@@ -14,6 +14,10 @@ def get_blog_document_file_name(instance, filename):
     return helpers.get_file_filename(instance, filename, "blog/documents")
 
 
+def get_blog_web_image_file_name(instance, filename):
+    return helpers.get_file_filename(instance, filename, "blog/web_images")
+
+
 ''' Types '''
 
 ITEM_STATUS_PUBLISHED = 1
@@ -233,5 +237,6 @@ class WebLink(abstracts.ModelAbstract):
 
 class WebImage(abstracts.ModelAbstract):
     image_url = models.URLField(max_length=10240)
+    image_file = models.ImageField(max_length=10240, upload_to=get_blog_web_image_file_name)
     web_link = models.ForeignKey(WebLink)
 

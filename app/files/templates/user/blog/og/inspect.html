@@ -43,9 +43,26 @@
         <h3>{% blocktrans %}Images{% endblocktrans %}</h3>
         <hr />
         <dd>
-            {% for web_image in web_inspector.web_link.webimage_set.all %}
-                <img src="{{ web_image.image_url }}" alt="{{ web_image.image_url }}" title="{{ web_image.image_url }}" />
-            {% endfor %}
+
+            <div class="row">
+                {% for web_image in web_inspector.web_link.webimage_set.all %}
+                    <div class="col-md-6">
+                        <div class="thumbnail">
+                            <img src="{{ web_image.image_url }}" alt="{{ web_image.image_url }}" title="{{ web_image.image_url }}" />
+                            <div class="caption">
+                                <p>{{ web_image.image_url }}</p>
+                                {% if not web_image.image_file %}
+                                    <p>
+                                        <a class="btn btn-primary btn-xs">
+                                            {% blocktrans %}Save image{% endblocktrans %}</a>
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
         </dd>
     </dl>
 {% else %}
