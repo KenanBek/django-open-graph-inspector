@@ -31,7 +31,9 @@
         <dd>
             {{ web_inspector.web_link.og_image }}
             {% if web_inspector.web_link.og_image %}
-                <img src="{{ web_inspector.web_link.og_image }}" />
+                <div class="thumbnail">
+                    <img src="{{ web_inspector.web_link.og_image }}" />
+                </div>
             {% endif %}
         </dd>
         <dt>{% trans "URL" %}</dt>
@@ -52,7 +54,7 @@
                             <div class="caption">
                                 <p>{{ web_image.image_url }}</p>
                                 {% if not web_image.image_file %}
-                                    <p>
+                                    <p style="text-wrap: normal;">
                                         <a class="btn btn-primary btn-xs" data-type="save-image" data-image-id="{{ web_image.id }}">
                                             {% blocktrans %}save image{% endblocktrans %}
                                         </a>
