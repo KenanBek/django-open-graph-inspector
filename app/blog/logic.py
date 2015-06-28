@@ -158,7 +158,8 @@ class OpenGraphLogic(object):
     def _get_meta_tag_value(self, document, selector):
         tag = self._css_select(document, selector)
         if tag:
-            return Helper.to_unicode_or_bust(tag[0]['content'])
+            content = tag[0].get('content', None)
+            return Helper.to_unicode_or_bust(content)
 
     def _get_og_image_urls(self, document):
         result = []
