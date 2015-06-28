@@ -2,6 +2,7 @@ import urllib2
 import urlparse
 
 from bs4 import BeautifulSoup
+import chardet
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
@@ -63,18 +64,38 @@ class WebInspector(object):
 
 class Helper(object):
     @staticmethod
-    def encode_string(s):
-        if isinstance(s, str):
-            return unicode(s, 'utf-8')
-        elif isinstance(s, unicode):
-            return s.encode('utf-8')
-        else:
-            raise Exception(u"Incorrect input parameter for string encoder")
+    def to_unicode_or_bust(obj):
+        if isinstance(obj, basestring):
+            if not isinstance(obj, unicode):
+                success = True
+                try:
+                    obj = unicode(obj, 'utf-8')
+                except:
+                    success = False
+                if not success:
+                    try:
+                        encoding = chardet.detect(obj)
+                        if encoding:
+                            encoding_text = encoding.get('encoding', None)
+                            if encoding_text:
+                                obj = unicode(obj).decode(encoding_text).encode('utf-8')
+                    except:
+                        pass
+                        # try:
+                        # obj = unicode(obj).decode('latin1').encode('utf-8')
+                        # except:
+                        # pass
+                        # try:
+                        # encoding = chardet.detect(obj).encoding
+                        # obj = unicode(obj).decode(encoding).encode('utf-8')
+                        # except:
+                        # pass
+        return obj
 
     @staticmethod
     def get_page_by_url(url):
         try:
-            encoded_url = Helper.encode_string(url)
+            encoded_url = Helper.to_unicode_or_bust(url)
             request = urllib2.Request(url=encoded_url, headers={'User-Agent': "Mozilla/5.0 (Windows NT 6.2; WOW64)"})
             page_stream = urllib2.urlopen(request, timeout=5)
             if page_stream.url != encoded_url:
@@ -82,7 +103,7 @@ class Helper(object):
                 return WebPage(success=False, message=message)
             else:
                 content = page_stream.read()
-                encoded_content = Helper.encode_string(content)
+                encoded_content = Helper.to_unicode_or_bust(content)
                 return WebPage(success=True, status=page_stream.code, content=encoded_content)
         except urllib2.HTTPError as e:
             return WebPage(success=False, status=e.code, message=e.msg)
@@ -113,7 +134,7 @@ class OpenGraphLogic(object):
     url = None
 
     def __init__(self, url):
-        self.url = url
+        self.url = Helper.to_unicode_or_bust(url)
 
     def _get_web_link(self):
         web_link = models.WebLink()
@@ -132,12 +153,12 @@ class OpenGraphLogic(object):
     def _get_text_tag_value(self, document, selector):
         tag = self._css_select(document, selector)
         if tag:
-            return Helper.encode_string(tag[0].text)
+            return Helper.to_unicode_or_bust(tag[0].text)
 
     def _get_meta_tag_value(self, document, selector):
         tag = self._css_select(document, selector)
         if tag:
-            return Helper.encode_string(tag[0]['content'])
+            return Helper.to_unicode_or_bust(tag[0]['content'])
 
     def _get_og_image_urls(self, document):
         result = []
@@ -146,7 +167,7 @@ class OpenGraphLogic(object):
             for tag in tags:
                 url = tag.get('content', None)
                 if url:
-                    result.append(Helper.encode_string(url))
+                    result.append(Helper.to_unicode_or_bust(url))
         return Helper.clean_array(result)
 
     def _get_html_image_urls(self, document):
@@ -156,7 +177,7 @@ class OpenGraphLogic(object):
             for tag in tags:
                 url = tag.get('src', None)
                 if url:
-                    result.append(Helper.encode_string(url))
+                    result.append(Helper.to_unicode_or_bust(url))
         return Helper.clean_array(result)
 
     def inspect(self):

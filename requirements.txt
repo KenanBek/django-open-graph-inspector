@@ -16,5 +16,6 @@ djangorestframework
 easy-thumbnails
 python-slugify
 lxml
+chardet
 beautifulsoup4
 

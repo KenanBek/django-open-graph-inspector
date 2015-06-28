@@ -1,73 +1,69 @@
 {% load i18n %}
-{% if web_inspector.success %}
-    <h2>{% trans "Result" %}</h2>
-    <dl class="dl-horizontal">
-        <dt>{% trans "Success" %}</dt>
-        <dd>{{ web_inspector.success }}</dd>
-        <dt>{% trans "Message" %}</dt>
-        <dd>{{ web_inspector.message }}</dd>
-        <hr />
-        <dt>{% trans "URL" %}</dt>
-        <dd>{{ web_inspector.web_link.url }}</dd>
-        <dt>{% trans "Version" %}</dt>
-        <dd>{{ web_inspector.web_link.version }}</dd>
-        <h3>{% blocktrans %}Standard HTML attributes{% endblocktrans %}</h3>
-        <hr />
-        <dt>{% trans "Title" %}</dt>
-        <dd>{{ web_inspector.web_link.title }}</dd>
-        <dt>{% trans "Description" %}</dt>
-        <dd>{{ web_inspector.web_link.description }}</dd>
-        <dt>{% trans "Keywords" %}</dt>
-        <dd>{{ web_inspector.web_link.keywords }}</dd>
-        <dt>{% trans "Author" %}</dt>
-        <dd>{{ web_inspector.web_link.author }}</dd>
-        <h3>{% blocktrans %}The Open Graph Protocol attributes{% endblocktrans %}</h3>
-        <hr />
-        <dt>{% trans "Title" %}</dt>
-        <dd>{{ web_inspector.web_link.og_title }}</dd>
-        <dt>{% trans "Type" %}</dt>
-        <dd>{{ web_inspector.web_link.og_type }}</dd>
-        <dt>{% trans "Image" %}</dt>
-        <dd>
-            {{ web_inspector.web_link.og_image }}
-            {% if web_inspector.web_link.og_image %}
-                <div class="thumbnail">
-                    <img src="{{ web_inspector.web_link.og_image }}" />
-                </div>
-            {% endif %}
-        </dd>
-        <dt>{% trans "URL" %}</dt>
-        <dd>{{ web_inspector.web_link.og_url }}</dd>
-        <dt>{% trans "Description" %}</dt>
-        <dd>{{ web_inspector.web_link.og_description }}</dd>
-        <dt>{% trans "Site name" %}</dt>
-        <dd>{{ web_inspector.web_link.og_site_name }}</dd>
-        <h3>{% blocktrans %}Images{% endblocktrans %}</h3>
-        <hr />
-        <dd>
+<h2>{% trans "Result" %}</h2>
+<dl class="dl-horizontal">
+    <dt>{% trans "Success" %}</dt>
+    <dd>{{ web_inspector.success }}</dd>
+    <dt>{% trans "Message" %}</dt>
+    <dd>{{ web_inspector.message }}</dd>
+    <hr />
+    <dt>{% trans "URL" %}</dt>
+    <dd>{{ web_inspector.web_link.url }}</dd>
+    <dt>{% trans "Version" %}</dt>
+    <dd>{{ web_inspector.web_link.version }}</dd>
+    <h3>{% blocktrans %}Standard HTML attributes{% endblocktrans %}</h3>
+    <hr />
+    <dt>{% trans "Title" %}</dt>
+    <dd>{{ web_inspector.web_link.title }}</dd>
+    <dt>{% trans "Description" %}</dt>
+    <dd>{{ web_inspector.web_link.description }}</dd>
+    <dt>{% trans "Keywords" %}</dt>
+    <dd>{{ web_inspector.web_link.keywords }}</dd>
+    <dt>{% trans "Author" %}</dt>
+    <dd>{{ web_inspector.web_link.author }}</dd>
+    <h3>{% blocktrans %}The Open Graph Protocol attributes{% endblocktrans %}</h3>
+    <hr />
+    <dt>{% trans "Title" %}</dt>
+    <dd>{{ web_inspector.web_link.og_title }}</dd>
+    <dt>{% trans "Type" %}</dt>
+    <dd>{{ web_inspector.web_link.og_type }}</dd>
+    <dt>{% trans "Image" %}</dt>
+    <dd>
+        {{ web_inspector.web_link.og_image }}
+        {% if web_inspector.web_link.og_image %}
+            <div class="thumbnail">
+                <img src="{{ web_inspector.web_link.og_image }}" />
+            </div>
+        {% endif %}
+    </dd>
+    <dt>{% trans "URL" %}</dt>
+    <dd>{{ web_inspector.web_link.og_url }}</dd>
+    <dt>{% trans "Description" %}</dt>
+    <dd>{{ web_inspector.web_link.og_description }}</dd>
+    <dt>{% trans "Site name" %}</dt>
+    <dd>{{ web_inspector.web_link.og_site_name }}</dd>
+    <h3>{% blocktrans %}Images{% endblocktrans %}</h3>
+    <hr />
+    <dd>
 
-            <div class="row">
-                {% for web_image in web_inspector.web_link.webimage_set.all %}
-                    <div class="col-md-6">
-                        <div class="thumbnail">
-                            <img src="{{ web_image.image_url }}" alt="{{ web_image.image_url }}" title="{{ web_image.image_url }}" />
-                            <div class="caption">
-                                <p>{{ web_image.image_url }}</p>
-                                {% if not web_image.image_file %}
-                                    <p style="text-wrap: normal;">
-                                        <a class="btn btn-primary btn-xs" data-type="save-image" data-image-id="{{ web_image.id }}">
-                                            {% blocktrans %}save image{% endblocktrans %}
-                                        </a>
-                                    </p>
-                                {% endif %}
-                            </div>
+        <div class="row">
+            {% for web_image in web_inspector.web_link.webimage_set.all %}
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img src="{{ web_image.image_url }}" alt="{{ web_image.image_url }}" title="{{ web_image.image_url }}" />
+                        <div class="caption">
+                            <p>{{ web_image.image_url }}</p>
+                            {% if not web_image.image_file %}
+                                <p style="text-wrap: normal;">
+                                    <a class="btn btn-primary btn-xs" data-type="save-image" data-image-id="{{ web_image.id }}">
+                                        {% blocktrans %}save image{% endblocktrans %}
+                                    </a>
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
+        </div>
 
-        </dd>
-    </dl>
-{% else %}
-    <p class="text text-danger">{{ web_inspector.message }}</p>
-{% endif %}
+    </dd>
+</dl>

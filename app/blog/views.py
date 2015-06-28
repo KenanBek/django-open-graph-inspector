@@ -221,14 +221,18 @@ def save_image(request, context={}):
             web_image_id = request.POST.get("imageId", None)
             web_image = models.WebImage.objects.get(pk=web_image_id)
 
+            image_request = urllib2.Request(url=web_image.image_url,
+                headers={'User-Agent': "Mozilla/5.0 (Windows NT 6.2; WOW64)"})
+            image_stream = urllib2.urlopen(image_request, timeout=5)
+
             image_temp = NamedTemporaryFile()
-            image_temp.write(urllib2.urlopen(web_image.image_url).read())
+            image_temp.write(image_stream.read())
             image_temp.flush()
 
             correct_url = os.path.join(web_image.image_url)
 
             web_image.image_file.save(
-                os.path.basename(correct_url),
+                web_image.web_link.title + ".png",
                 File(image_temp)
             )
             web_image.save()
