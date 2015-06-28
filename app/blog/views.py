@@ -1,4 +1,9 @@
+import os
+import urllib2
+
 from django.core.exceptions import ValidationError
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
@@ -11,7 +16,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 
 from core import abstracts
-from core.utils.decorators import log
+from core.utils.decorators import log, json
 from . import models
 from . import forms
 from . import logic
@@ -204,4 +209,35 @@ def inspect(request, template='user/blog/og/inspect.html', context={}):
             result.message = _("URL is empty.")
     context['web_inspector'] = result
     return render(request, template, context)
+
+
+@json
+def save_image(request, context={}):
+    if request.method == "GET":
+        context['success'] = False
+        context['message'] = _("Use only GET requests.")
+    else:
+        try:
+            web_image_id = request.POST.get("imageId", None)
+            web_image = models.WebImage.objects.get(pk=web_image_id)
+
+            image_temp = NamedTemporaryFile()
+            image_temp.write(urllib2.urlopen(web_image.image_url).read())
+            image_temp.flush()
+
+            correct_url = os.path.join(web_image.image_url)
+
+            web_image.image_file.save(
+                os.path.basename(correct_url),
+                File(image_temp)
+            )
+            web_image.save()
+
+            context['success'] = True
+            context['message'] = _("Done!")[:]
+        except Exception as e:
+            message = u"Exception on save image: {}".format(repr(e))
+            context['success'] = False
+            context['message'] = message
+    return context
 

@@ -53,8 +53,9 @@
                                 <p>{{ web_image.image_url }}</p>
                                 {% if not web_image.image_file %}
                                     <p>
-                                        <a class="btn btn-primary btn-xs">
-                                            {% blocktrans %}Save image{% endblocktrans %}</a>
+                                        <a class="btn btn-primary btn-xs" data-type="save-image" data-image-id="{{ web_image.id }}">
+                                            {% blocktrans %}save image{% endblocktrans %}
+                                        </a>
                                     </p>
                                 {% endif %}
                             </div>

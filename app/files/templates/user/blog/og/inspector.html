@@ -2,14 +2,14 @@
 {% load i18n %}
 
 {% block content %}
-    <div id="loading" style="display: none; position: absolute; top: 5px; right: 20px; background-color: #737373; color: snow;">
-        <h5>{% blocktrans %}Inspecting...{% endblocktrans %}</h5>
+    <div id="processing-container" style="display: none; position: fixed; top: 60px; right: 20px; background-color: #737373; color: snow; padding: 5px; z-index: 9999;">
+        <h5>{% blocktrans %}Processing...{% endblocktrans %}</h5>
     </div>
     <div class="row">
         <div class="col-md-12">
             <h1>{% blocktrans %}The Open Graph Protocol Inspector{% endblocktrans %}</h1>
             <div class="span12">
-                <input id="url" name="url" type="text" class="inline" style="width: 80%;" placeholder="{% trans "Please enter URL..." %}">
+                <input id="url" name="url" type="text" class="inline" style="width: 80%;" placeholder="{% trans "Please enter URL..." %}" value="http://tapdoon.com/board/">
                 <input id="inspect" type="button" class="inline" value="{% trans "Inspect" %}">
             </div>
         </div>
@@ -24,6 +24,7 @@
 
 {% block scripts %}
     {% url 'blog_og_inspect' as blog_og_inspect %}
+    {% url 'blog_og_save_image' as blog_og_save_image %}
     <script type="application/javascript">
         var initializeAjax = function () {
             function csrfSafeMethod(method) {
@@ -40,10 +41,11 @@
             });
         };
         initializeAjax();
+
         $("#inspect").click(function () {
             var url = $("#url").val();
             if (url) {
-                $("#loading").show();
+                $("#processing-container").show();
                 $.ajax({
                     url: "{{ blog_og_inspect }}", type: "POST", data: {"url": url}
                 }).done(function (result, textStatus, jqXHR) {
@@ -55,11 +57,28 @@
                     alert("Unexpected error occurred. Please see console for details.");
                     $("#inspect-result-container").html("");
                 }).always(function () {
-                    $("#loading").hide();
+                    $("#processing-container").hide();
                 });
             } else {
                 alert("Please enter URL.");
             }
-        })
+        });
+
+        $("body").on("click", "a[data-type=save-image]", function () {
+            var imageId = $(this).data("image-id");
+            $("#processing-container").show();
+            $.ajax({
+                url: "{{ blog_og_save_image }}", type: "POST", data: {"imageId": imageId}
+            }).done(function (result, textStatus, jqXHR) {
+                alert(result.result.message);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("Start of error variables:");
+                console.log(jqXHR, textStatus, errorThrown);
+                console.log("End of error variables.");
+                alert("Unexpected error occurred. Please see console for details.");
+            }).always(function () {
+                $("#processing-container").hide();
+            });
+        });
     </script>
 {% endblock %}

@@ -35,6 +35,7 @@ urlpatterns = patterns('blog.views',
     # The Open Graph Protocol
     url(r'^og/inspector/$', 'inspector', name='blog_og_inspector'),
     url(r'^og/inspect/$', 'inspect', name='blog_og_inspect'),
+    url(r'^og/save_image/$', 'save_image', name='blog_og_save_image'),
     # API
     url(r'^api/', include(api_router.urls)),
 )
